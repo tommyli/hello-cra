@@ -45,24 +45,96 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+This section has moved here: <https://facebook.github.io/create-react-app/docs/code-splitting>
 
 ### Analyzing the Bundle Size
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+This section has moved here: <https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size>
 
 ### Making a Progressive Web App
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+This section has moved here: <https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app>
 
 ### Advanced Configuration
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+This section has moved here: <https://facebook.github.io/create-react-app/docs/advanced-configuration>
 
 ### Deployment
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+This section has moved here: <https://facebook.github.io/create-react-app/docs/deployment>
 
 ### `yarn build` fails to minify
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+This section has moved here: <<https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails>
+
+## Build App
+
+```bash
+yarn build
+```
+
+## Build Container and Publish to Docker Hub
+
+```bash
+docker build --tag tommyyli/hello-cra .
+
+docker push tommyyli/hello-cra
+```
+
+## Deploy Container to GCP Kubernetes Engine
+
+### Prerequisites
+
+* GCP configured.
+* Create Kubernetes cluster:
+
+```bash
+gcloud container clusters create hello-cra --num-nodes=1
+```
+
+### Deploy
+
+```bash
+# If doing this first time then an error complaining "hello-cra-service" not found
+kubectl delete service hello-cra-service
+
+kubectl apply -f kubectl-deployment.yml
+
+kubectl apply -f kubectl-service.yml
+```
+
+OR
+
+Using gcloud commands
+
+```bash
+kubectl create deployment hello-cradeployment --image=registry.hub.docker.com/tommyyli/hello-cra
+
+kubectl expose deployment hello-cra-deployment --type LoadBalancer --port 80 --target-port 5000
+```
+
+## Administration and Troubleshooting
+
+Get all pods (smallest deployment unit in GCP Kubernetes, essentially, it's a group of 1 or more containers) running.
+
+```bash
+kubectl get pods
+```
+
+Get all services running.
+
+```bash
+kubectl get service
+```
+
+Access application using `EXTERNAL-IP` from the results of `kubectl get service` (hello-cra-service) command above.
+
+### Cleanup
+
+```bash
+kubectl delete service hello-cra-service
+
+kubectl delete deployment hello-cra-deployment
+
+gcloud container clusters delete hello-cra
+```

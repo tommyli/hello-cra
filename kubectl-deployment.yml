@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+
+kind: Deployment
+metadata:
+  name: hello-cra-deployment
+  labels:
+    app: hello-cra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-cra
+  template:
+    metadata:
+      labels:
+        app: hello-cra
+    spec:
+      containers:
+        - name: hello-cra
+          image: registry.hub.docker.com/tommyyli/hello-cra
+          ports:
+            - containerPort: 5000
