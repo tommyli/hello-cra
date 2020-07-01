@@ -68,6 +68,13 @@ kubectl get service
 
 Access application using `EXTERNAL-IP` from the results of `kubectl get service` (hello-cra-service) command above.
 
+The `gcloud container clusters create` command above automatically updates your Kubernetes config file (default location is ~/.kube/config)
+with credentials and context set to this cluster.  If for any reason the context is switched, to switch back then run this:
+
+```bash
+gcloud container clusters get-credentials hello-cra
+```
+
 ### Cleanup
 
 ```bash
