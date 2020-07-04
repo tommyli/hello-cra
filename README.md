@@ -8,51 +8,73 @@ to Google Cloud Platform Kubernetes Engine.
 ### Prerequisites
 
 * GCP configured.
+* Docker already configured and logged in to Docker Hub
 
-## Build App
-
-```bash
-yarn build
-```
-
-## Build Container and Publish to Docker Hub
+## Build Container and Publish to Docker Hub and Deploy to GKE
 
 ```bash
-docker build --tag tommyyli/hello-cra .
+docker-compose build
 
-docker push tommyyli/hello-cra
-```
+docker push tommyyli/hello-cra:latest
 
-## Deploy Container to GCP Kubernetes Engine
-
-Create Kubernetes cluster:
-
-```bash
-gcloud container clusters create hello-cra --num-nodes=1
-```
-
-### Deploy
-
-```bash
-# If doing this first time then an error complaining "hello-cra-service" not found
-kubectl delete service hello-cra-service
-
-kubectl apply -f kubectl-deployment.yml
-
-kubectl apply -f kubectl-service.yml
-```
-
-OR
-
-Using gcloud commands
-
-```bash
-kubectl create deployment hello-cradeployment --image=registry.hub.docker.com/tommyyli/hello-cra
-
-kubectl expose deployment hello-cra-deployment --type LoadBalancer --port 80 --target-port 5000
+kubectl apply -f hello-cra.yml
 ```
 
 ## Administration and Troubleshooting
+
+### Administering Docker Locally
+
+[Docker Cheat Sheet](https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes)
+
+Running docker containers.
+
+```bash
+# Run container
+docker run -p 5000:5000 --name hello-cra tommyyli/hello-cra
+
+# Run container as daemon
+docker run -p 5000:5000 --name hello-cra -d tommyyli/hello-cra
+
+# OR using docker-compose
+docker-compose up -d
+```
+
+View running and stopped docker containers.
+
+```bash
+# View currently running
+docker ps
+
+# View all, currently running or stopped
+docker ps -a
+```
+
+Building docker images
+
+```bash
+# Using docker
+docker build --tag tommyyli/hello-cra:latest .
+
+# OR
+
+# Using docker-compose
+docker-compose build
+```
+
+View docker images
+
+```bash
+# List docker images
+docker images
+
+# Remove docker image by name
+docker rmi tommyyli/hello-cra
+
+# Remove docker images by `IMAGE ID`
+docker rmi 2af76a5b9374 34eb3a8a848c
+```
+
+### Adminstering Kubernetes Locally
 
 Get all pods (smallest deployment unit in GCP Kubernetes, essentially, it's a group of 1 or more containers) running.
 
@@ -73,6 +95,22 @@ with credentials and context set to this cluster.  If for any reason the context
 
 ```bash
 gcloud container clusters get-credentials hello-cra
+```
+
+Create Kubernetes cluster:
+
+```bash
+gcloud container clusters create hello-cra --num-nodes=1
+```
+
+Using kubectl commands instead of `kubectl apply -f hello-cra.yml`
+
+```bash
+# Create deployment
+kubectl create deployment hello-cradeployment --image=registry.hub.docker.com/tommyyli/hello-cra
+
+# Create service
+kubectl expose deployment hello-cra-deployment --type LoadBalancer --port 80 --target-port 5000
 ```
 
 ### Cleanup

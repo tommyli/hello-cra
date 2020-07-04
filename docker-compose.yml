@@ -2,9 +2,10 @@ version: "2"
 
 services:
   web:
+    image: tommyyli/hello-cra:latest
     build:
       context: .
       dockerfile: Dockerfile
     container_name: hello-cra
     ports:
-      - "6000:5000"
+      - "5000:5000"

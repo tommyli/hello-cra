@@ -1,9 +1,17 @@
-FROM node:12.18.1
+FROM node:12.18.2-alpine
 
-WORKDIR /cra
+WORKDIR /hello-cra
 
-COPY build /cra/build
+COPY package.json yarn.lock /hello-cra/
+
+RUN yarn install --frozen-lockfile
 
 RUN yarn global add serve
+
+COPY public /hello-cra/public
+
+COPY src /hello-cra/src
+
+RUN yarn build --quiet
 
 CMD ["serve", "-s", "build"]
