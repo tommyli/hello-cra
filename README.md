@@ -103,7 +103,13 @@ Create Kubernetes cluster:
 gcloud container clusters create hello-cra --num-nodes=1
 ```
 
-Using kubectl commands instead of `kubectl apply -f hello-cra.yml`
+Resizing cluster, use 3 nodes for `default-pool`
+
+```bash
+gcloud container clusters resize hello-cra --node-pool default-pool --num-nodes 3
+```
+
+Using kubectl commands instead of `kubectl apply -f hello-cra.yml` to create deployments.
 
 ```bash
 # Create deployment
